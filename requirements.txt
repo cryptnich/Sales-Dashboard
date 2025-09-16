@@ -1,0 +1,11 @@
+# Core libraries
+streamlit
+plotly
+pandas
+numpy
+
+# Optional but commonly used for dashboards
+openpyxl  # for Excel file support
+xlrd      # for older Excel formats
+requests  # for API calls
+datetime  # usually built-in, but good to be explicit
