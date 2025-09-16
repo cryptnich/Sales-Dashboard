@@ -1,86 +1,40 @@
-st.markdown("""
-<style>
-    /* Fonts */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
-    html, body, [class*="css"] {
-        font-family: 'Inter', sans-serif;
-        background-color: #ffffff;
-    }
+# KPI Section
+st.markdown("### Key Metrics")
 
-    /* Header */
-    .main-header {
-        font-size: 2.4rem;
-        font-weight: 700;
-        color: #222222;
-        text-align: center;
-        margin-bottom: 0.5rem;
-    }
-    .subtitle {
-        font-size: 1.05rem;
-        color: #555555;
-        text-align: center;
-        margin-bottom: 2rem;
-        font-weight: 400;
-    }
+col1, col2, col3, col4 = st.columns(4)
 
-    /* KPI Metric Cards */
-    .metric-card {
-        background: #f9fafb;
-        padding: 1.2rem;
-        border-radius: 8px;
-        border: 1px solid #e5e7eb;
-        text-align: center;
-    }
-    .metric-card h4 {
-        margin: 0;
-        font-size: 1rem;
-        font-weight: 600;
-        color: #333333;
-    }
-    .metric-card p {
-        margin: 0.2rem 0;
-    }
-    .metric-card .big-number {
-        font-size: 1.4rem;
-        font-weight: 700;
-        color: #111111;
-    }
-    .metric-card .small-note {
-        font-size: 0.85rem;
-        color: #666666;
-    }
+with col1:
+    st.markdown(f"""
+    <div class='metric-card'>
+        <h4>Total Sales</h4>
+        <p class='big-number'>${total_sales:,.0f}</p>
+        <p class='small-note'>Change: {sales_delta:+.1f}%</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-    /* Tabs */
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 10px;
-    }
-    .stTabs [data-baseweb="tab"] {
-        height: 40px;
-        padding: 0 18px;
-        background-color: #f3f4f6;
-        border-radius: 5px;
-        border: 1px solid #d1d5db;
-        color: #333333;
-        font-weight: 500;
-    }
-    .stTabs [aria-selected="true"] {
-        background-color: #4ade80 !important;  /* soft green highlight */
-        color: white !important;
-        border: none !important;
-    }
+with col2:
+    st.markdown(f"""
+    <div class='metric-card'>
+        <h4>Avg Order Value</h4>
+        <p class='big-number'>${avg_order_value:,.2f}</p>
+        <p class='small-note'>Based on transactions</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-    /* Sidebar */
-    [data-testid="stSidebar"] {
-        background-color: #f9fafb;
-        border-right: 1px solid #e5e7eb;
-    }
+with col3:
+    st.markdown(f"""
+    <div class='metric-card'>
+        <h4>Total Customers</h4>
+        <p class='big-number'>{total_customers:,}</p>
+        <p class='small-note'>Unique buyers</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-    /* Footer */
-    .footer {
-        text-align: center;
-        color: #666666;
-        font-size: 0.9rem;
-        margin-top: 2rem;
-    }
-</style>
-""", unsafe_allow_html=True)
+with col4:
+    st.markdown(f"""
+    <div class='metric-card'>
+        <h4>Conversion Rate</h4>
+        <p class='big-number'>{conversion_rate:.1f}%</p>
+        <p class='small-note'>vs last month</p>
+    </div>
+    """, unsafe_allow_html=True)
