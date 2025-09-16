@@ -143,7 +143,7 @@ if data_source == "Upload File":
         st.success("✅ Data uploaded successfully!")
 elif data_source == "Use Sample Data":
     df = load_data()
-    st.info("📊 Using sample data for demonstration")
+    st.info("Using sample data for demonstration")
 else:
     try:
         df = load_data("superstore.csv")
@@ -164,7 +164,7 @@ if 'Order Date' in df.columns:
     min_date = df['Order Date'].min().date()
     max_date = df['Order Date'].max().date()
     date_range = st.sidebar.date_input(
-        "📅 Date Range",
+        "Date Range",
         value=[min_date, max_date],
         min_value=min_date,
         max_value=max_date
@@ -178,13 +178,13 @@ if 'Order Date' in df.columns:
 
 # Multi-select filters
 region = st.sidebar.multiselect(
-    "🌍 Select Region:",
+    "Select Region:",
     options=df["Region"].unique(),
     default=df["Region"].unique()
 )
 
 category = st.sidebar.multiselect(
-    "📦 Select Category:",
+    "Select Category:",
     options=df["Category"].unique(),
     default=df["Category"].unique()
 )
@@ -192,7 +192,7 @@ category = st.sidebar.multiselect(
 # Sales range filter
 if not df.empty:
     sales_range = st.sidebar.slider(
-        "💰 Sales Range",
+        "Sales Range",
         min_value=float(df["Sales"].min()),
         max_value=float(df["Sales"].max()),
         value=(float(df["Sales"].min()), float(df["Sales"].max())),
@@ -205,7 +205,7 @@ df_selection = df.query(
 )
 
 if df_selection.empty:
-    st.warning("🚨 No data matches the selected filters!")
+    st.warning("No data matches the selected filters!")
     st.stop()
 
 # ------------------------
@@ -240,39 +240,39 @@ col1, col2, col3, col4, col5, col6 = st.columns(6)
 
 with col1:
     st.metric(
-        "💰 Total Sales",
+        "Total Sales",
         f"${total_sales:,.0f}",
         delta=f"{sales_delta:+.1f}%"
     )
 
 with col2:
     st.metric(
-        "📈 Total Profit",
+        "Total Profit",
         f"${total_profit:,.0f}",
         delta=f"{profit_delta:+.1f}%"
     )
 
 with col3:
     st.metric(
-        "🎯 Profit Margin",
+        "Profit Margin",
         f"{profit_margin:.1f}%"
     )
 
 with col4:
     st.metric(
-        "💳 Avg Order Value",
+        "Avg Order Value",
         f"${avg_order_value:.0f}"
     )
 
 with col5:
     st.metric(
-        "🛒 Total Orders",
+        "Total Orders",
         f"{total_orders:,}"
     )
 
 with col6:
     st.metric(
-        "🏷️ Avg Discount",
+        "🏷Avg Discount",
         f"{avg_discount:.1f}%"
     )
 
@@ -293,7 +293,7 @@ with tab1:
             sales_by_category,
             x="Category",
             y="Sales",
-            title="💼 Sales Performance by Category",
+            title="Sales Performance by Category",
             color="Category",
             color_discrete_sequence=px.colors.qualitative.Set3
         )
@@ -312,7 +312,7 @@ with tab1:
             sales_by_region,
             names="Region",
             values="Sales",
-            title="🌍 Revenue Distribution by Region",
+            title="Revenue Distribution by Region",
             color_discrete_sequence=px.colors.qualitative.Pastel
         )
         fig_region.update_traces(textposition='inside', textinfo='percent+label')
@@ -334,7 +334,7 @@ with tab1:
             y="Profit",
             color="Category",
             size="Discount",
-            title="💹 Sales vs Profit Analysis",
+            title="Sales vs Profit Analysis",
             hover_data=["Region"]
         )
         fig_scatter.update_layout(
@@ -356,7 +356,7 @@ with tab1:
             profit_margin_by_cat,
             x="Category",
             y="Profit Margin",
-            title="📊 Profit Margin by Category",
+            title="Profit Margin by Category",
             color="Profit Margin",
             color_continuous_scale="RdYlGn"
         )
@@ -381,7 +381,7 @@ with tab2:
                 monthly_sales,
                 x="Order Date",
                 y="Sales",
-                title="📈 Monthly Sales Trend",
+                title="Monthly Sales Trend",
                 markers=True
             )
             fig_trend.update_traces(line_color='#667eea', marker_color='#764ba2')
@@ -403,7 +403,7 @@ with tab2:
                 x="Quarter",
                 y="Sales",
                 color="Category",
-                title="📅 Quarterly Sales by Category",
+                title="Quarterly Sales by Category",
                 barmode="stack"
             )
             fig_quarterly.update_layout(
@@ -432,7 +432,7 @@ with tab3:
             regional_performance,
             x="Region",
             y="Total Sales",
-            title="🗺️ Sales by Region",
+            title="🗺Sales by Region",
             color="Total Sales",
             color_continuous_scale="Blues"
         )
@@ -449,7 +449,7 @@ with tab3:
             regional_performance,
             x="Region",
             y="Profit Margin",
-            title="💹 Profit Margin by Region",
+            title="Profit Margin by Region",
             color="Profit Margin",
             color_continuous_scale="RdYlGn"
         )
@@ -462,7 +462,7 @@ with tab3:
         st.plotly_chart(fig_regional_profit, use_container_width=True)
     
     # Regional performance table
-    st.subheader("📋 Regional Performance Summary")
+    st.subheader("Regional Performance Summary")
     st.dataframe(regional_performance, use_container_width=True)
 
 with tab4:
@@ -481,7 +481,7 @@ with tab4:
             discount_impact,
             x='Discount',
             y=['Sales', 'Profit'],
-            title="🏷️ Impact of Discounts on Performance",
+            title="🏷Impact of Discounts on Performance",
             barmode='group'
         )
         fig_discount.update_layout(
@@ -498,7 +498,7 @@ with tab4:
             df_selection,
             x="Sales",
             nbins=30,
-            title="📊 Sales Distribution",
+            title="Sales Distribution",
             color_discrete_sequence=['#667eea']
         )
         fig_dist.update_layout(
@@ -530,21 +530,21 @@ with tab5:
         avg_discount_profitable = df_selection[df_selection['Profit'] > 0]['Discount'].mean() * 100
         
         insights = [
-            f"🏆 **Best performing region**: {best_region}",
-            f"💰 **Most profitable category**: {best_category}",
-            f"🎯 **Average discount on profitable sales**: {avg_discount_profitable:.1f}%",
-            f"📊 **Total transactions analyzed**: {len(df_selection):,}",
-            f"💹 **Overall profit margin**: {profit_margin:.1f}%"
+            f" **Best performing region**: {best_region}",
+            f" **Most profitable category**: {best_category}",
+            f" **Average discount on profitable sales**: {avg_discount_profitable:.1f}%",
+            f" **Total transactions analyzed**: {len(df_selection):,}",
+            f" **Overall profit margin**: {profit_margin:.1f}%"
         ]
         
         for insight in insights:
             st.markdown(insight)
     
     # Raw data viewer
-    st.subheader("📋 Raw Data Viewer")
+    st.subheader("Raw Data Viewer")
     
     # Search functionality
-    search_term = st.text_input("🔍 Search in data:", "")
+    search_term = st.text_input("Search in data:", "")
     if search_term:
         mask = df_selection.astype(str).apply(lambda x: x.str.contains(search_term, case=False, na=False)).any(axis=1)
         filtered_df = df_selection[mask]
@@ -574,12 +574,12 @@ with tab5:
 # Export Section
 # ------------------------
 st.markdown("---")
-st.subheader("📥 Export Data")
+st.subheader("Export Data")
 
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    if st.button("📊 Export Filtered Data"):
+    if st.button("Export Filtered Data"):
         csv = df_selection.to_csv(index=False)
         st.download_button(
             label="Download CSV",
@@ -589,7 +589,7 @@ with col1:
         )
 
 with col2:
-    if st.button("📈 Export Summary Report"):
+    if st.button("Export Summary Report"):
         summary_data = {
             'Metric': ['Total Sales', 'Total Profit', 'Profit Margin', 'Total Orders', 'Avg Order Value'],
             'Value': [f"${total_sales:,.0f}", f"${total_profit:,.0f}", f"{profit_margin:.1f}%", 
@@ -609,8 +609,9 @@ st.markdown("---")
 st.markdown(
     """
     <div style='text-align: center; color: #64748b; font-size: 0.9rem; margin-top: 2rem;'>
-        📊 Executive Sales Dashboard | Built with Streamlit & Plotly | Last Updated: {}
+        Executive Sales Dashboard | Built with Streamlit & Plotly | Last Updated: {}
     </div>
     """.format(datetime.now().strftime("%Y-%m-%d %H:%M")),
     unsafe_allow_html=True
 )
+
