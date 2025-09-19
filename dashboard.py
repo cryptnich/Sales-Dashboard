@@ -6,9 +6,8 @@ import numpy as np
 from datetime import datetime, timedelta
 import time
 
-# ------------------------
 # Page Configuration
-# ------------------------
+
 st.set_page_config(
     page_title="Executive Sales Dashboard", 
     layout="wide",
@@ -94,9 +93,8 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ------------------------
 # Load Data with Error Handling
-# ------------------------
+
 @st.cache_data
 def load_data(file_path=None, uploaded_file=None):
     try:
@@ -133,6 +131,7 @@ st.markdown('<h1 class="main-header">EXECUTIVE SALES DASHBOARD</h1>', unsafe_all
 st.markdown('<p class="subtitle">Real-time Business Intelligence & Performance Analytics</p>', unsafe_allow_html=True)
 
 # Data loading section
+
 data_source = st.radio("Choose Data Source:", ["Upload File", "Use Sample Data", "Default File"], horizontal=True)
 
 df = None
@@ -154,12 +153,12 @@ else:
 if df is None:
     st.stop()
 
-# ------------------------
 # Advanced Sidebar Filters
-# ------------------------
+
 st.sidebar.markdown("### 🔍 Filter Controls")
 
 # Date range filter
+
 if 'Order Date' in df.columns:
     min_date = df['Order Date'].min().date()
     max_date = df['Order Date'].max().date()
@@ -171,12 +170,14 @@ if 'Order Date' in df.columns:
     )
     
     # Apply date filter
+    
     if len(date_range) == 2:
         start_date, end_date = date_range
         df = df[(df['Order Date'].dt.date >= start_date) & 
                 (df['Order Date'].dt.date <= end_date)]
 
 # Multi-select filters
+
 region = st.sidebar.multiselect(
     " Select Region:",
     options=df["Region"].unique(),
@@ -190,6 +191,7 @@ category = st.sidebar.multiselect(
 )
 
 # Sales range filter
+
 if not df.empty:
     sales_range = st.sidebar.slider(
         " Sales Range",
@@ -200,6 +202,7 @@ if not df.empty:
     )
 
 # Apply filters
+
 df_selection = df.query(
     "Region == @region & Category == @category & Sales >= @sales_range[0] & Sales <= @sales_range[1]"
 )
@@ -208,12 +211,12 @@ if df_selection.empty:
     st.warning("🚨 No data matches the selected filters!")
     st.stop()
 
-# ------------------------
 # KPI Section with Advanced Metrics
-# ------------------------
+
 st.markdown("---")
 
 # Calculate metrics
+
 total_sales = df_selection["Sales"].sum()
 total_profit = df_selection["Profit"].sum()
 avg_discount = df_selection["Discount"].mean() * 100
@@ -222,6 +225,7 @@ total_orders = len(df_selection)
 avg_order_value = total_sales / total_orders if total_orders > 0 else 0
 
 # Calculate deltas (comparing with previous period)
+
 if 'Order Date' in df_selection.columns and len(df_selection) > 0:
     current_period = df_selection[df_selection['Order Date'] >= df_selection['Order Date'].quantile(0.5)]
     previous_period = df_selection[df_selection['Order Date'] < df_selection['Order Date'].quantile(0.5)]
@@ -236,6 +240,7 @@ else:
     profit_delta = 0
 
 # Display KPIs
+
 col1, col2, col3, col4, col5, col6 = st.columns(6)
 
 with col1:
@@ -286,7 +291,9 @@ with tab1:
     col1, col2 = st.columns(2)
     
     with col1:
+        
         # Enhanced Sales by Category
+        
         sales_by_category = df_selection.groupby("Category")["Sales"].sum().reset_index()
         fig_category = px.bar(
             sales_by_category,
@@ -305,7 +312,9 @@ with tab1:
         st.plotly_chart(fig_category, use_container_width=True)
     
     with col2:
+        
         # Enhanced Sales by Region
+        
         sales_by_region = df_selection.groupby("Region")["Sales"].sum().reset_index()
         fig_region = px.pie(
             sales_by_region,
@@ -324,6 +333,7 @@ with tab1:
         st.plotly_chart(fig_region, use_container_width=True)
     
     # Profit vs Sales Scatter
+    
     col3, col4 = st.columns(2)
     
     with col3:
@@ -345,7 +355,9 @@ with tab1:
         st.plotly_chart(fig_scatter, use_container_width=True)
     
     with col4:
+        
         # Top performing categories by profit margin
+        
         profit_margin_by_cat = df_selection.groupby("Category").apply(
             lambda x: x["Profit"].sum() / x["Sales"].sum() * 100 if x["Sales"].sum() > 0 else 0
         ).reset_index()
@@ -369,7 +381,9 @@ with tab1:
 
 with tab2:
     if 'Order Date' in df_selection.columns:
+        
         # Monthly trend
+        
         col1, col2 = st.columns(2)
         
         with col1:
@@ -393,7 +407,9 @@ with tab2:
             st.plotly_chart(fig_trend, use_container_width=True)
         
         with col2:
+            
             # Quarterly comparison
+            
             df_selection['Quarter'] = df_selection['Order Date'].dt.to_period('Q').astype(str)
             quarterly_data = df_selection.groupby(['Quarter', 'Category'])['Sales'].sum().reset_index()
             
@@ -414,7 +430,9 @@ with tab2:
             st.plotly_chart(fig_quarterly, use_container_width=True)
 
 with tab3:
+    
     # Geographic analysis
+    
     regional_performance = df_selection.groupby("Region").agg({
         "Sales": "sum",
         "Profit": "sum",
@@ -461,15 +479,20 @@ with tab3:
         st.plotly_chart(fig_regional_profit, use_container_width=True)
     
     # Regional performance table
+    
     st.subheader(" Regional Performance Summary")
     st.dataframe(regional_performance, use_container_width=True)
 
 with tab4:
+    
     # Performance analytics
+    
     col1, col2 = st.columns(2)
     
     with col1:
+        
         # Discount impact analysis
+        
         discount_bins = pd.cut(df_selection['Discount'], bins=5, labels=['0-10%', '10-20%', '20-30%', '30-40%', '40-50%'])
         discount_impact = df_selection.groupby(discount_bins).agg({
             'Sales': 'mean',
@@ -492,7 +515,9 @@ with tab4:
         st.plotly_chart(fig_discount, use_container_width=True)
     
     with col2:
+        
         # Sales distribution
+        
         fig_dist = px.histogram(
             df_selection,
             x="Sales",
@@ -509,10 +534,13 @@ with tab4:
         st.plotly_chart(fig_dist, use_container_width=True)
 
 with tab5:
+    
     # Deep dive analytics
+    
     st.subheader(" Detailed Data Analysis")
     
     # Statistical summary
+    
     col1, col2 = st.columns(2)
     
     with col1:
@@ -524,6 +552,7 @@ with tab5:
         st.subheader(" Key Insights")
         
         # Calculate insights
+        
         best_region = df_selection.groupby('Region')['Sales'].sum().idxmax()
         best_category = df_selection.groupby('Category')['Profit'].sum().idxmax()
         avg_discount_profitable = df_selection[df_selection['Profit'] > 0]['Discount'].mean() * 100
@@ -540,9 +569,11 @@ with tab5:
             st.markdown(insight)
     
     # Raw data viewer
+    
     st.subheader("📋 Raw Data Viewer")
     
     # Search functionality
+    
     search_term = st.text_input("🔍 Search in data:", "")
     if search_term:
         mask = df_selection.astype(str).apply(lambda x: x.str.contains(search_term, case=False, na=False)).any(axis=1)
@@ -551,6 +582,7 @@ with tab5:
         filtered_df = df_selection
     
     # Display data with pagination
+    
     page_size = st.selectbox("Rows per page:", [10, 25, 50, 100], index=1)
     
     if len(filtered_df) > 0:
@@ -603,6 +635,7 @@ with col2:
         )
 
 # Footer
+
 st.markdown("---")
 st.markdown(
     """
@@ -612,3 +645,4 @@ st.markdown(
     """.format(datetime.now().strftime("%Y-%m-%d %H:%M")),
     unsafe_allow_html=True
 )
+
